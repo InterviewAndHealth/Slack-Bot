@@ -1,17 +1,18 @@
-from enum import StrEnum
-import psycopg2
-import pandas as pd
 import os
+from enum import StrEnum
 
-from app.main import app
+import pandas as pd
+import psycopg2
+
 from app import (
-    POSTGRES_USERNAME,
-    POSTGRES_PASSWORD,
-    POSTGRES_HOST,
-    POSTGRES_PORT,
-    USER_SERVICE_DB,
     PAYMENT_SERVICE_DB,
+    POSTGRES_HOST,
+    POSTGRES_PASSWORD,
+    POSTGRES_PORT,
+    POSTGRES_USERNAME,
+    USER_SERVICE_DB,
 )
+from app.main import app
 
 
 class SupportedTables(StrEnum):

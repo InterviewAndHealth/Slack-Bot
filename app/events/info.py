@@ -2,11 +2,7 @@ import asyncio
 from typing import List
 
 from app.deployments import deployments
-from app.git import (
-    get_latest_commit,
-    get_latest_deployments,
-    get_latest_image,
-)
+from app.git import get_latest_commit, get_latest_deployments, get_latest_image
 from app.main import app
 from app.models import Deployment
 from app.utils import format_date

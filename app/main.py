@@ -1,9 +1,15 @@
+import logging
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from slack_bolt.adapter.fastapi.async_handler import AsyncSlackRequestHandler
 from slack_bolt.async_app import AsyncApp
 
 from app import BOT_TOKEN, SIGNING_SECRET
+
+logging.getLogger("uvicorn.access").addFilter(
+    lambda record: "GET / " not in record.getMessage()
+)
 
 app = AsyncApp(
     name="Slack Bot",
