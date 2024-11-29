@@ -6,7 +6,7 @@ from slack_bolt.async_app import AsyncApp
 from app import BOT_TOKEN, SIGNING_SECRET
 
 app = AsyncApp(
-    name="Deployment Manager",
+    name="Slack Bot",
     token=BOT_TOKEN,
     signing_secret=SIGNING_SECRET,
 )
@@ -15,8 +15,8 @@ app = AsyncApp(
 app_handler = AsyncSlackRequestHandler(app)
 
 api = FastAPI(
-    title="Deployment Manager",
-    description="A Slack app for managing iamreadyai deployments",
+    title="Slack Bot",
+    description="A Slack Bot for managing deployments and more!",
     version="0.1.0",
 )
 
@@ -31,7 +31,7 @@ api.add_middleware(
 
 @api.get("/")
 async def root():
-    return {"message": "Welcome to the Deployment Manager!"}
+    return {"message": "Welcome to the Slack Bot!"}
 
 
 @api.post("/slack/events")
