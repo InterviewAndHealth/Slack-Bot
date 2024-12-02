@@ -99,6 +99,10 @@ async def get(ack, respond, command):
             df.to_excel(file_path, index=False)
             logging.info(f"Data from `{table}` table saved to {file_path}")
 
+            logging.info(
+                f"Uploading data from `{table}` table to Slack channel {command['channel_id']}..."
+            )
+
             # Upload file to Slack
             await app.client.files_upload_v2(
                 channel=command["channel_id"],
@@ -106,7 +110,7 @@ async def get(ack, respond, command):
                 title=f"{table}.xlsx",
                 initial_comment=f"Here is the data from `{table}` table.",
             )
-
+            logging.info(f"Data from `{table}` table uploaded.")
             os.remove(file_path)
 
     except Exception as e:
