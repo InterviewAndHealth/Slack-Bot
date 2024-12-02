@@ -7,6 +7,7 @@ from slack_bolt.async_app import AsyncApp
 
 from app import BOT_TOKEN, SIGNING_SECRET
 
+logging.basicConfig(level=logging.INFO, format="%(levelname)s:\t  %(message)s")
 logging.getLogger("uvicorn.access").addFilter(
     lambda record: "GET / " not in record.getMessage()
 )

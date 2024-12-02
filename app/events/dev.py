@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from typing import List
 
 from app.deployments import deployments
@@ -90,6 +91,7 @@ def get_deployment_checkbox(deployment: Deployment):
 @app.command("/dev")
 async def dev_deploy(ack, respond, command):
     await ack()
+    logging.info(f"Acknowledged /dev command")
 
     try:
         deployments_data = await get_deployments_data()
@@ -97,6 +99,7 @@ async def dev_deploy(ack, respond, command):
             deployments_data
         )
     except Exception as e:
+        logging.error(f"Error fetching deployments data: {e}")
         return await respond(f"❌ Error: {e}")
 
     message_blocks = [
@@ -204,6 +207,10 @@ async def deploy_dev_button_action(body, ack, respond):
     ]
     if not selected_deployments:
         return await respond("❌ No services selected for deployment.")
+
+    logging.info(
+        f"Deploy to Development: {[deployment.title for deployment in selected_deployments]}"
+    )
 
     results = await asyncio.gather(
         *[

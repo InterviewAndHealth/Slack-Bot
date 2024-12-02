@@ -1,3 +1,4 @@
+import logging
 import os
 from enum import StrEnum
 
@@ -76,6 +77,7 @@ async def get(ack, respond, command):
             )
 
         await respond(f"Getting data from `{table}` table...")
+        logging.info(f"Getting data from `{table}` table...")
 
         with psycopg2.connect(
             user=POSTGRES_USERNAME,
@@ -86,23 +88,27 @@ async def get(ack, respond, command):
         ) as conn:
             query = f"SELECT {TableColumns[table]} FROM {table}"
             df = pd.read_sql_query(query, conn, dtype=str)
+            logging.info(
+                f"Data from `{table}` table retrieved successfully. Rows: {len(df)}"
+            )
 
-        # Rename columns
-        df.columns = TableColumnsAlias[table]
+            # Rename columns
+            df.columns = TableColumnsAlias[table]
 
-        file_path = f"{table}.xlsx"
-        df.to_excel(file_path, index=False)
+            file_path = f"/tmp/{table}.xlsx"
+            df.to_excel(file_path, index=False)
+            logging.info(f"Data from `{table}` table saved to {file_path}")
 
-        # Upload file to Slack
-        await app.client.files_upload_v2(
-            channel=command["channel_id"],
-            file=file_path,
-            title=f"{table}.xlsx",
-            initial_comment=f"Here is the data from `{table}` table.",
-        )
+            # Upload file to Slack
+            await app.client.files_upload_v2(
+                channel=command["channel_id"],
+                file=file_path,
+                title=f"{table}.xlsx",
+                initial_comment=f"Here is the data from `{table}` table.",
+            )
 
-        os.remove(file_path)
+            os.remove(file_path)
 
     except Exception as e:
-        print(e)
+        logging.error(f"Error: {e}")
         return await respond(f"❌ Error: {e}")
