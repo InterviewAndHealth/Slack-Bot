@@ -1,48 +1,16 @@
+import datetime
 import logging
 import os
 from enum import StrEnum
 
-import pandas as pd
-import psycopg2
-
-from app import (
-    PAYMENT_SERVICE_DB,
-    POSTGRES_HOST,
-    POSTGRES_PASSWORD,
-    POSTGRES_PORT,
-    POSTGRES_USERNAME,
-    USER_SERVICE_DB,
-)
 from app.main import app
+from app.utils import get_payments, get_recruiters, get_students
 
 
 class SupportedTables(StrEnum):
-    users = "users"
+    students = "students"
+    recruiters = "recruiters"
     payments = "payments"
-
-
-class TableDatabase(StrEnum):
-    users = USER_SERVICE_DB
-    payments = PAYMENT_SERVICE_DB
-
-
-class TableColumns(StrEnum):
-    users = "public_id, email, userrole, created_at"
-    payments = "user_id, customer_email, amount_total, currency, payment_method_types, timestamp, session_id"
-
-
-TableColumnsAlias: dict[SupportedTables, list[str]] = {
-    SupportedTables.users: ["User ID", "Email", "User Role", "Created At"],
-    SupportedTables.payments: [
-        "User ID",
-        "Email",
-        "Amount",
-        "Currency",
-        "Payment Method",
-        "Timestamp",
-        "Session ID",
-    ],
-}
 
 
 @app.command("/get")
@@ -50,7 +18,21 @@ async def get(ack, respond, command):
     await ack()
 
     try:
-        table = command.get("text", "").strip()
+        raw_table = command.get("text", "").strip()
+        if not raw_table:
+            return await respond(
+                blocks=[
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": f"Please provide a table name.\nSupported tables: {', '.join([f'`{table.value}`' for table in SupportedTables])}.\n\nExample: `/get students`\n\nYou can also use substring of the table name. For example, `/get stu`.",
+                        },
+                    }
+                ]
+            )
+
+        table = next((t for t in SupportedTables if t.startswith(raw_table)), None)
         if not table:
             return await respond(
                 blocks=[
@@ -58,19 +40,7 @@ async def get(ack, respond, command):
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": f"Please provide a table name.\nSupported tables: {', '.join([f'`{table.value}`' for table in SupportedTables])}.\n\nExample: `/get users`",
-                        },
-                    }
-                ]
-            )
-        elif table not in SupportedTables:
-            return await respond(
-                blocks=[
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": f"Table `{table}` is not supported.\nSupported tables: {', '.join([f'`{table.value}`' for table in SupportedTables])}.",
+                            "text": f"Table `{raw_table}` is not supported.\nSupported tables: {', '.join([f'`{table.value}`' for table in SupportedTables])}.",
                         },
                     }
                 ]
@@ -79,39 +49,22 @@ async def get(ack, respond, command):
         await respond(f"Getting data from `{table}` table...")
         logging.info(f"Getting data from `{table}` table...")
 
-        with psycopg2.connect(
-            user=POSTGRES_USERNAME,
-            password=POSTGRES_PASSWORD,
-            host=POSTGRES_HOST,
-            port=POSTGRES_PORT,
-            database=TableDatabase[table],
-        ) as conn:
-            query = f"SELECT {TableColumns[table]} FROM {table}"
-            df = pd.read_sql_query(query, conn, dtype=str)
-            logging.info(
-                f"Data from `{table}` table retrieved successfully. Rows: {len(df)}"
-            )
+        if table == SupportedTables.students:
+            (file_name, file_path) = await get_students()
+        elif table == SupportedTables.recruiters:
+            (file_name, file_path) = await get_recruiters()
+        elif table == SupportedTables.payments:
+            (file_name, file_path) = await get_payments()
 
-            # Rename columns
-            df.columns = TableColumnsAlias[table]
-
-            file_path = f"/tmp/{table}.xlsx"
-            df.to_excel(file_path, index=False)
-            logging.info(f"Data from `{table}` table saved to {file_path}")
-
-            logging.info(
-                f"Uploading data from `{table}` table to Slack channel {command['channel_id']}..."
-            )
-
-            # Upload file to Slack
-            await app.client.files_upload_v2(
-                channel=command["channel_id"],
-                file=file_path,
-                title=f"{table}.xlsx",
-                initial_comment=f"Here is the data from `{table}` table.",
-            )
-            logging.info(f"Data from `{table}` table uploaded.")
-            os.remove(file_path)
+        # Upload file to Slack
+        await app.client.files_upload_v2(
+            channel=command["channel_id"],
+            filename=file_name,
+            file=file_path,
+            initial_comment=f"Here is the data from `{table}` table ({datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}).",
+        )
+        logging.info(f"Data from `{table}` table uploaded.")
+        os.remove(file_path)
 
     except Exception as e:
         logging.error(f"Error: {e}")
