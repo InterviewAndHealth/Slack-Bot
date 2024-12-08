@@ -15,7 +15,7 @@ class Deployment(BaseModel):
     emoji: str
     package: Package
     repository: Repository
-    workflows: Workflows
+    workflows: Workflows = Workflows()
     deployments: ClusterDeployment
 
     latest_image: LatestImages = None

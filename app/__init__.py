@@ -20,6 +20,27 @@ POSTGRES_PORT = os.environ.get("POSTGRES_PORT")
 USER_SERVICE_DB = os.environ.get("USER_SERVICE_DB", "users_db")
 PAYMENT_SERVICE_DB = os.environ.get("PAYMENT_SERVICE_DB", "payments_db")
 
+DEFAULT_PACKAGE_USERNAME = os.environ.get(
+    "DEFAULT_PACKAGE_USERNAME", "interviewandhealth"
+)
+DEFAULT_REPOSITORY_OWNER = os.environ.get(
+    "DEFAULT_REPOSITORY_OWNER", "InterviewAndHealth"
+)
+DEFAULT_BRANCH = os.environ.get("DEFAULT_BRANCH", "main")
+DEFAULT_CLUSTER_REPOSITORY = os.environ.get("DEFAULT_CLUSTER_REPOSITORY", "Cluster")
+DEFAULT_DEVELOPMENT_WORKFLOW = os.environ.get(
+    "DEFAULT_DEVELOPMENT_WORKFLOW", "build.yml"
+)
+DEFAULT_PRODUCTION_WORKFLOW = os.environ.get(
+    "DEFAULT_PRODUCTION_WORKFLOW", "deploy.yml"
+)
+DEFAULT_DEVELOPMENT_KUSTOMIZATION = os.environ.get(
+    "DEFAULT_DEVELOPMENT_KUSTOMIZATION", "development/kustomization.yaml"
+)
+DEFAULT_PRODUCTION_KUSTOMIZATION = os.environ.get(
+    "DEFAULT_PRODUCTION_KUSTOMIZATION", "production/kustomization.yaml"
+)
+
 _imported_variable = {
     "PORT": PORT,
     "BOT_TOKEN": BOT_TOKEN,

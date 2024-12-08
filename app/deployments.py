@@ -5,234 +5,80 @@ deployments: list[Deployment] = [
         id="frontend",
         title="Frontend",
         emoji="🖥️",
-        package=Package(
-            username="interviewandhealth",
-            image="frontend",
-        ),
-        repository=Repository(
-            owner="InterviewAndHealth",
-            repo="Frontend",
-        ),
-        workflows=Workflows(
-            development="build.yml",
-            production="deploy.yml",
-        ),
-        deployments=ClusterDeployment(
-            repository=Repository(
-                owner="InterviewAndHealth",
-                repo="Cluster",
-            ),
-            base_path="services/frontend/overlays",
-            development="development/kustomization.yaml",
-            production="production/kustomization.yaml",
-        ),
+        package=Package(image="frontend"),
+        repository=Repository(repo="Frontend"),
+        deployments=ClusterDeployment(servive="frontend"),
     ),
     Deployment(
         id="user-service",
         title="User Service",
         emoji="👤",
-        package=Package(
-            username="interviewandhealth",
-            image="user-service",
-        ),
-        repository=Repository(
-            owner="InterviewAndHealth",
-            repo="User-Service",
-        ),
-        workflows=Workflows(
-            development="build.yml",
-            production="deploy.yml",
-        ),
-        deployments=ClusterDeployment(
-            repository=Repository(
-                owner="InterviewAndHealth",
-                repo="Cluster",
-            ),
-            base_path="services/user-service/overlays",
-            development="development/kustomization.yaml",
-            production="production/kustomization.yaml",
-        ),
+        package=Package(image="user-service"),
+        repository=Repository(repo="User-Service"),
+        deployments=ClusterDeployment(servive="user-service"),
     ),
     Deployment(
         id="interview-service",
         title="Interview Service",
         emoji="🎤",
-        package=Package(
-            username="interviewandhealth",
-            image="interview-service",
-        ),
-        repository=Repository(
-            owner="InterviewAndHealth",
-            repo="Interview-Service",
-        ),
-        workflows=Workflows(
-            development="build.yml",
-            production="deploy.yml",
-        ),
-        deployments=ClusterDeployment(
-            repository=Repository(
-                owner="InterviewAndHealth",
-                repo="Cluster",
-            ),
-            base_path="services/interview-service/overlays",
-            development="development/kustomization.yaml",
-            production="production/kustomization.yaml",
-        ),
+        package=Package(image="interview-service"),
+        repository=Repository(repo="Interview-Service"),
+        deployments=ClusterDeployment(servive="interview-service"),
     ),
     Deployment(
         id="conversation-service",
         title="Conversation Service",
         emoji="💬",
-        package=Package(
-            username="interviewandhealth",
-            image="conversation-service",
-        ),
-        repository=Repository(
-            owner="InterviewAndHealth",
-            repo="Conversation-Service",
-        ),
-        workflows=Workflows(
-            development="build.yml",
-            production="deploy.yml",
-        ),
-        deployments=ClusterDeployment(
-            repository=Repository(
-                owner="InterviewAndHealth",
-                repo="Cluster",
-            ),
-            base_path="services/conversation-service/overlays",
-            development="development/kustomization.yaml",
-            production="production/kustomization.yaml",
-        ),
+        package=Package(image="conversation-service"),
+        repository=Repository(repo="Conversation-Service"),
+        deployments=ClusterDeployment(servive="conversation-service"),
     ),
     Deployment(
         id="payment-service",
         title="Payment Service",
         emoji="💳",
-        package=Package(
-            username="interviewandhealth",
-            image="payment-service",
-        ),
-        repository=Repository(
-            owner="InterviewAndHealth",
-            repo="Payment-Service",
-        ),
-        workflows=Workflows(
-            development="build.yml",
-            production="deploy.yml",
-        ),
-        deployments=ClusterDeployment(
-            repository=Repository(
-                owner="InterviewAndHealth",
-                repo="Cluster",
-            ),
-            base_path="services/payment-service/overlays",
-            development="development/kustomization.yaml",
-            production="production/kustomization.yaml",
-        ),
+        package=Package(image="payment-service"),
+        repository=Repository(repo="Payment-Service"),
+        deployments=ClusterDeployment(servive="payment-service"),
     ),
     Deployment(
         id="job-service",
         title="Job Service",
         emoji="👷",
-        package=Package(
-            username="interviewandhealth",
-            image="job-service",
-        ),
-        repository=Repository(
-            owner="InterviewAndHealth",
-            repo="Job-Service",
-        ),
-        workflows=Workflows(
-            development="build.yml",
-            production="deploy.yml",
-        ),
-        deployments=ClusterDeployment(
-            repository=Repository(
-                owner="InterviewAndHealth",
-                repo="Cluster",
-            ),
-            base_path="services/job-service/overlays",
-            development="development/kustomization.yaml",
-            production="production/kustomization.yaml",
-        ),
+        package=Package(image="job-service"),
+        repository=Repository(repo="Job-Service"),
+        deployments=ClusterDeployment(servive="job-service"),
     ),
     Deployment(
         id="scheduler-service",
         title="Scheduler Service",
         emoji="🗓️",
-        package=Package(
-            username="interviewandhealth",
-            image="scheduler-service",
-        ),
-        repository=Repository(
-            owner="InterviewAndHealth",
-            repo="Scheduler-Service",
-        ),
-        workflows=Workflows(
-            development="build.yml",
-            production="deploy.yml",
-        ),
-        deployments=ClusterDeployment(
-            repository=Repository(
-                owner="InterviewAndHealth",
-                repo="Cluster",
-            ),
-            base_path="services/scheduler-service/overlays",
-            development="development/kustomization.yaml",
-            production="production/kustomization.yaml",
-        ),
+        package=Package(image="scheduler-service"),
+        repository=Repository(repo="Scheduler-Service"),
+        deployments=ClusterDeployment(servive="scheduler-service"),
     ),
     Deployment(
         id="rabbitmq-keepalive",
         title="Cron Job - RabbitMQ Keep Alive",
         emoji="⏰🐇",
-        package=Package(
-            username="interviewandhealth",
-            image="cronjob/rabbitmq-keepalive",
-        ),
-        repository=Repository(
-            owner="InterviewAndHealth",
-            repo="CronJobs",
-        ),
+        package=Package(image="cronjob/rabbitmq-keepalive"),
+        repository=Repository(repo="CronJobs"),
+        deployments=ClusterDeployment(servive="rabbitmq-keepalive"),
         workflows=Workflows(
             development="rabbitmq-keepalive-build.yml",
             production="rabbitmq-keepalive-deploy.yml",
-        ),
-        deployments=ClusterDeployment(
-            repository=Repository(
-                owner="InterviewAndHealth",
-                repo="Cluster",
-            ),
-            base_path="services/cronjobs/rabbitmq-keepalive/overlays",
-            development="development/kustomization.yaml",
-            production="production/kustomization.yaml",
         ),
     ),
     Deployment(
         id="process-pending-feedbacks",
         title="Cron Job - Process Pending Feedbacks",
         emoji="⏰📝",
-        package=Package(
-            username="interviewandhealth",
-            image="cronjob/process-pending-feedbacks",
-        ),
-        repository=Repository(
-            owner="InterviewAndHealth",
-            repo="CronJobs",
-        ),
+        package=Package(image="cronjob/process-pending-feedbacks"),
+        repository=Repository(repo="CronJobs"),
+        deployments=ClusterDeployment(servive="process-pending-feedbacks"),
         workflows=Workflows(
             development="process-pending-feedbacks-build.yml",
             production="process-pending-feedbacks-deploy.yml",
-        ),
-        deployments=ClusterDeployment(
-            repository=Repository(
-                owner="InterviewAndHealth",
-                repo="Cluster",
-            ),
-            base_path="services/cronjobs/process-pending-feedbacks/overlays",
-            development="development/kustomization.yaml",
-            production="production/kustomization.yaml",
         ),
     ),
 ]
